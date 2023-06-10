@@ -1,11 +1,9 @@
-import asyncio
-
 from data import ActionDB
 from aiogram_types import MarkupMaker, MessageSender
 from game_play import CardPlay, BotPlay
 
 import random
-from asyncio import sleep
+from asyncio import sleep, get_event_loop
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types, executor
 import os
@@ -41,7 +39,6 @@ async def command_how_to_play(message: types.Message):
     if message.chat.type == 'private':
         rules = emoji.emojize(DB.get_description('how_to_play'))
         await message.answer(rules, parse_mode='html')
-
 
 
 @dp.message_handler(commands=['start_game'])
@@ -612,12 +609,11 @@ async def set_commands():
     await bot.set_my_commands(commands_group, scope=types.BotCommandScopeAllGroupChats())
 
 
-loop = asyncio.get_event_loop()
+loop = get_event_loop()
 loop.run_until_complete(set_commands())
 
 def run_bot():
     executor.start_polling(dp, skip_updates=True)
-
 
 
 if __name__ == '__main__':
